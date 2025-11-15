@@ -690,6 +690,44 @@ body {
     margin-top: var(--spacing-sm);
 }
 
+/* Mensaje de derrota */
+.defeat-message {
+    text-align: center;
+}
+
+.defeat-text {
+    font-size: var(--font-size-lg);
+    color: var(--text-dark);
+    line-height: 1.8;
+}
+
+/* Aviso de mitad de tiempo - Cartel flotante */
+.half-time-warning {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    background: var(--color-yellow);
+    color: var(--text-dark);
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-radius: var(--border-radius-lg);
+    font-family: var(--font-title);
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    box-shadow: var(--shadow-lg);
+    z-index: 2000;
+    pointer-events: none; /* No bloquea los clics */
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    text-align: center;
+    white-space: nowrap;
+}
+
+.half-time-warning.active {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
 /* ============================================
    RESPONSIVE (11" - 23")
    ============================================ */

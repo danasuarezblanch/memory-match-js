@@ -7,9 +7,9 @@
  * Cada dificultad define el número de filas y columnas del tablero
  */
 const DIFFICULTIES = {
-    easy: { rows: 4, cols: 4, name: 'Fácil' },      // 16 tarjetas (8 pares)
-    medium: { rows: 5, cols: 4, name: 'Media' },    // 20 tarjetas (10 pares)
-    hard: { rows: 6, cols: 4, name: 'Difícil' }     // 24 tarjetas (12 pares)
+    easy: { rows: 4, cols: 4, name: 'Fácil', maxTime: 90 },      // 16 tarjetas (8 pares), 90 segundos
+    medium: { rows: 5, cols: 4, name: 'Media', maxTime: 60 },    // 20 tarjetas (10 pares), 60 segundos
+    hard: { rows: 6, cols: 4, name: 'Difícil', maxTime: 40 }     // 24 tarjetas (12 pares), 40 segundos
 };
 
 /**
@@ -22,8 +22,11 @@ const gameState = {
     flippedIndices: [],          // Índices de las cartas actualmente volteadas (máximo 2)
     matchedIds: new Set(),       // Set con los IDs de las cartas que ya fueron emparejadas
     moves: 0,                    // Contador de movimientos realizados
-    timerSeconds: 0,             // Tiempo transcurrido en segundos
-    running: false               // Indica si el juego está en curso
+    timerSeconds: 0,             // Tiempo restante en segundos (regresivo)
+    maxTime: 0,                  // Tiempo máximo según la dificultad
+    running: false,              // Indica si el juego está en curso
+    halfTimeWarningShown: false, // Bandera para mostrar el aviso de mitad de tiempo solo una vez
+    difficulty: null             // Dificultad actual
 };
 
 /**
@@ -67,6 +70,14 @@ const elements = {
     playAgainButton: document.getElementById('play-again-btn'),
     backToHomeButton: document.getElementById('back-to-home-btn'),
     
+    // Modal de derrota
+    defeatModal: document.getElementById('defeat-modal'),
+    defeatPlayAgainButton: document.getElementById('defeat-play-again-btn'),
+    defeatBackToHomeButton: document.getElementById('defeat-back-to-home-btn'),
+    
+    // Aviso de mitad de tiempo
+    halfTimeWarning: document.getElementById('half-time-warning'),
+    
     // Mejores tiempos
     bestTimeEasy: document.getElementById('best-time-easy'),
     bestTimeMedium: document.getElementById('best-time-medium'),
@@ -81,15 +92,18 @@ const elements = {
  * Inicializa el juego con la grilla seleccionada
  * @param {Object} gridSize - Objeto con propiedades rows y cols
  */
-function initGame(gridSize) {
+function initGame(gridSize, difficulty) {
     // Resetea el estado del juego
     gameState.gridSize = gridSize;
+    gameState.difficulty = difficulty;
     gameState.cards = [];
     gameState.flippedIndices = [];
     gameState.matchedIds = new Set();
     gameState.moves = 0;
-    gameState.timerSeconds = 0;
+    gameState.maxTime = DIFFICULTIES[difficulty].maxTime;
+    gameState.timerSeconds = gameState.maxTime; // Tiempo regresivo: empieza en el máximo
     gameState.running = false;
+    gameState.halfTimeWarningShown = false;
     
     // Genera el mazo de cartas
     gameState.cards = generateDeck(gridSize);
@@ -159,20 +173,37 @@ function shuffle(array) {
 }
 
 /**
- * Inicia el timer del juego
+ * Inicia el timer del juego (regresivo)
  * Actualiza el tiempo cada segundo mientras el juego esté corriendo
  */
 function startTimer() {
-    // Si ya hay un timer corriendo, no inicia otro
-    if (timerInterval) return;
+    // Cancela cualquier timer anterior
+    if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+    }
     
     gameState.running = true;
     
     // Crea un intervalo que se ejecuta cada segundo
     timerInterval = setInterval(() => {
         if (gameState.running) {
-            gameState.timerSeconds++;
+            gameState.timerSeconds--;
             updateTimerDisplay();
+            
+            // Verifica si llegó a la mitad del tiempo (solo una vez)
+            const halfTime = Math.floor(gameState.maxTime / 2);
+            if (gameState.timerSeconds === halfTime && !gameState.halfTimeWarningShown) {
+                showHalfTimeWarning();
+                gameState.halfTimeWarningShown = true;
+            }
+            
+            // Verifica si el tiempo se agotó
+            if (gameState.timerSeconds <= 0) {
+                gameState.timerSeconds = 0;
+                updateTimerDisplay(); // Actualiza para mostrar 00:00
+                handleTimeOut();
+            }
         }
     }, 1000);
 }
@@ -190,12 +221,14 @@ function stopTimer() {
 }
 
 /**
- * Resetea el timer a cero
+ * Resetea el timer al tiempo máximo según la dificultad
  */
 function resetTimer() {
     stopTimer();
-    gameState.timerSeconds = 0;
+    gameState.timerSeconds = gameState.maxTime;
+    gameState.halfTimeWarningShown = false;
     updateTimerDisplay();
+    hideHalfTimeWarning();
 }
 
 /**
@@ -273,8 +306,10 @@ function checkMatch() {
         // Verifica si el jugador ganó
         if (isWin()) {
             stopTimer();
+            // Calcula el tiempo transcurrido (maxTime - tiempo restante)
+            const elapsedTime = gameState.maxTime - gameState.timerSeconds;
             const stats = {
-                time: gameState.timerSeconds,
+                time: elapsedTime,
                 moves: gameState.moves,
                 gridSize: gameState.gridSize
             };
@@ -392,6 +427,55 @@ function playWinJingle() {
 }
 
 /**
+ * Muestra el aviso de mitad de tiempo
+ */
+function showHalfTimeWarning() {
+    if (elements.halfTimeWarning) {
+        elements.halfTimeWarning.classList.add('active');
+        // Oculta el aviso después de 2.5 segundos
+        setTimeout(() => {
+            hideHalfTimeWarning();
+        }, 2500);
+    }
+}
+
+/**
+ * Oculta el aviso de mitad de tiempo
+ */
+function hideHalfTimeWarning() {
+    if (elements.halfTimeWarning) {
+        elements.halfTimeWarning.classList.remove('active');
+    }
+}
+
+/**
+ * Maneja cuando el tiempo se agota (derrota)
+ */
+function handleTimeOut() {
+    // Solo muestra derrota si el juego está corriendo y no se ganó
+    if (gameState.running && !isWin()) {
+        stopTimer();
+        gameState.running = false;
+        showDefeatModal();
+    }
+}
+
+/**
+ * Muestra el modal de derrota
+ */
+function showDefeatModal() {
+    if (elements.defeatModal) {
+        elements.defeatModal.classList.add('active');
+        elements.defeatModal.setAttribute('aria-hidden', 'false');
+        
+        // Enfoca el botón "Jugar de nuevo" para accesibilidad
+        if (elements.defeatPlayAgainButton) {
+            elements.defeatPlayAgainButton.focus();
+        }
+    }
+}
+
+/**
  * Guarda el mejor tiempo en localStorage si es un nuevo récord
  * @param {Object} stats - Objeto con time y gridSize
  * @returns {boolean} true si es un nuevo récord
@@ -415,13 +499,22 @@ function saveBestTime(stats) {
    ============================================ */
 
 /**
- * Actualiza la visualización del timer en el DOM
+ * Actualiza la visualización del timer en el DOM (formato regresivo MM:SS)
  */
 function updateTimerDisplay() {
     const minutes = Math.floor(gameState.timerSeconds / 60);
     const seconds = gameState.timerSeconds % 60;
     const formattedTime = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
     elements.timer.textContent = formattedTime;
+    
+    // Cambia el color cuando el tiempo es crítico (menos de 10 segundos)
+    if (gameState.timerSeconds <= 10 && gameState.timerSeconds > 0) {
+        elements.timer.style.color = 'var(--color-coral)';
+        elements.timer.style.fontWeight = '700';
+    } else {
+        elements.timer.style.color = '';
+        elements.timer.style.fontWeight = '';
+    }
 }
 
 /**
@@ -599,6 +692,20 @@ function setupEventListeners() {
     elements.playAgainButton.addEventListener('click', playAgain);
     elements.backToHomeButton.addEventListener('click', backToHome);
     
+    // Modal de derrota
+    const closeDefeatButton = document.getElementById('close-defeat');
+    if (closeDefeatButton) {
+        closeDefeatButton.addEventListener('click', () => {
+            closeAllModals();
+        });
+    }
+    if (elements.defeatPlayAgainButton) {
+        elements.defeatPlayAgainButton.addEventListener('click', playAgain);
+    }
+    if (elements.defeatBackToHomeButton) {
+        elements.defeatBackToHomeButton.addEventListener('click', backToHome);
+    }
+    
     // Cerrar modales con overlay
     document.querySelectorAll('.modal-overlay').forEach(overlay => {
         overlay.addEventListener('click', (e) => {
@@ -664,15 +771,18 @@ function startGame() {
     const gridSize = DIFFICULTIES[difficulty];
     
     // Inicializa el juego con la lógica pura
-    initGame(gridSize);
+    initGame(gridSize, difficulty);
     
     // Renderiza el tablero
     renderBoard();
     
+    // Actualiza el display del timer antes de cambiar de pantalla
+    updateTimerDisplay();
+    
     // Cambia a la pantalla de juego
     switchToGameScreen();
     
-    // Inicia el timer
+    // Inicia el timer regresivo
     startTimer();
 }
 
@@ -680,15 +790,25 @@ function startGame() {
  * Reinicia el juego actual
  */
 function restartGame() {
-    if (!gameState.running && gameState.timerSeconds === 0) return;
-    
-    // Resetea el timer
-    resetTimer();
+    // Cierra cualquier modal abierto
+    closeAllModals();
+    hideHalfTimeWarning();
     
     // Resetea movimientos y estado
     gameState.moves = 0;
     gameState.flippedIndices = [];
     gameState.matchedIds = new Set();
+    gameState.running = false;
+    gameState.halfTimeWarningShown = false;
+    
+    // Asegura que el tiempo máximo esté configurado según la dificultad actual
+    if (gameState.difficulty) {
+        gameState.maxTime = DIFFICULTIES[gameState.difficulty].maxTime;
+    }
+    
+    // Resetea el timer al tiempo máximo
+    resetTimer();
+    
     updateMovesDisplay();
     
     // Mezcla las cartas nuevamente
@@ -724,8 +844,9 @@ function backToHome() {
     // Detiene el juego
     stopTimer();
     
-    // Cierra modales
+    // Cierra modales y avisos
     closeAllModals();
+    hideHalfTimeWarning();
     
     // Cambia a la pantalla de inicio
     elements.gameScreen.classList.remove('active');

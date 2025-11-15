@@ -261,6 +261,55 @@
     </div>
 
     <!-- 
+        MODAL: DERROTA (Tiempo agotado)
+        Se muestra cuando el tiempo llega a 0 antes de encontrar todos los pares.
+    -->
+    <div id="defeat-modal" class="modal" role="dialog" aria-labelledby="defeat-title" aria-hidden="true">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="defeat-title">¡Uy! Se derritió el helado 🍦💦</h2>
+                <button 
+                    id="close-defeat" 
+                    class="modal-close"
+                    aria-label="Cerrar modal de derrota"
+                >
+                    ×
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="defeat-message">
+                    <p class="defeat-text">No pudiste encontrar todos los pares a tiempo. Probá de nuevo.</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button 
+                    id="defeat-play-again-btn" 
+                    class="btn btn-primary"
+                    aria-label="Jugar de nuevo"
+                >
+                    Jugar de nuevo 🔄
+                </button>
+                <button 
+                    id="defeat-back-to-home-btn" 
+                    class="btn btn-secondary"
+                    aria-label="Volver al inicio"
+                >
+                    Volver al inicio
+                </button>
+            </div>
+        </div>
+        <div class="modal-overlay" aria-hidden="true"></div>
+    </div>
+
+    <!-- 
+        AVISO DE MITAD DE TIEMPO
+        Aparece cuando queda la mitad del tiempo disponible.
+    -->
+    <div id="half-time-warning" class="half-time-warning" aria-live="polite" aria-atomic="true">
+        ¡Rápido, que se te derrite el helado! 🍦
+    </div>
+
+    <!-- 
         SCRIPT PRINCIPAL
         game.js contiene toda la lógica del juego:
         - Estado del juego (gameState)
