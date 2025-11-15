@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego de Memoria</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- 
+        PANTALLA DE INICIO (HOME)
+        Esta pantalla se muestra por defecto y permite seleccionar la dificultad.
+        Los botones están conectados a funciones en game.js mediante event listeners
+        configurados en la función setupEventListeners().
+    -->
+    <div id="home-screen" class="screen active">
+        <div class="home-container">
+            <h1 class="game-title">Juego de Memoria</h1>
+            
+            <!-- 
+                SELECTOR DE DIFICULTAD
+                Los botones tienen data-difficulty que se usa en handleDifficultySelect()
+                para determinar qué dificultad se seleccionó. Al hacer clic, se marca
+                como "selected" y se guarda en gameState.difficulty.
+            -->
+            <div class="difficulty-selector">
+                <h2>Selecciona la dificultad:</h2>
+                <div class="difficulty-options">
+                    <button 
+                        class="difficulty-btn" 
+                        data-difficulty="easy"
+                        aria-label="Dificultad fácil: 4 filas por 4 columnas"
+                    >
+                        <span class="difficulty-name">Fácil</span>
+                        <span class="difficulty-size">4x4</span>
+                    </button>
+                    <button 
+                        class="difficulty-btn" 
+                        data-difficulty="medium"
+                        aria-label="Dificultad media: 5 filas por 4 columnas"
+                    >
+                        <span class="difficulty-name">Media</span>
+                        <span class="difficulty-size">5x4</span>
+                    </button>
+                    <button 
+                        class="difficulty-btn" 
+                        data-difficulty="hard"
+                        aria-label="Dificultad difícil: 6 filas por 4 columnas"
+                    >
+                        <span class="difficulty-name">Difícil</span>
+                        <span class="difficulty-size">6x4</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 
+                BOTONES DE ACCIÓN
+                - "Jugar" (id="play-btn"): Conectado a startGame() que llama a initGame()
+                  con el gridSize correspondiente a la dificultad seleccionada.
+                - "¿Cómo se juega?" (id="how-to-play-btn"): Abre el modal de instrucciones
+                  mediante openHowToPlayModal().
+            -->
+            <div class="home-actions">
+                <button 
+                    id="play-btn" 
+                    class="btn btn-primary"
+                    aria-label="Comenzar a jugar"
+                >
+                    Jugar
+                </button>
+                <button 
+                    id="how-to-play-btn" 
+                    class="btn btn-secondary"
+                    aria-label="Abrir instrucciones del juego"
+                >
+                    ¿Cómo se juega?
+                </button>
+            </div>
+
+            <!-- 
+                MEJORES TIEMPOS
+                Estos elementos se actualizan mediante loadBestTimes() que lee
+                del localStorage usando las claves "bestTime_<cols>x<rows>".
+                Se muestran los mejores tiempos guardados por cada dificultad.
+            -->
+            <div class="best-times">
+                <h3>Mejores tiempos:</h3>
+                <div class="time-records">
+                    <div class="time-record">
+                        <span class="time-label">Fácil:</span>
+                        <span id="best-time-easy" class="time-value">--:--</span>
+                    </div>
+                    <div class="time-record">
+                        <span class="time-label">Media:</span>
+                        <span id="best-time-medium" class="time-value">--:--</span>
+                    </div>
+                    <div class="time-record">
+                        <span class="time-label">Difícil:</span>
+                        <span id="best-time-hard" class="time-value">--:--</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 
+        PANTALLA DE JUEGO
+        Se muestra cuando el juego está activo. El tablero se renderiza dinámicamente
+        mediante renderBoard() que crea las cartas usando createCardElement().
+        Cada carta tiene un event listener que llama a onCardFlip(index) cuando se hace clic.
+    -->
+    <div id="game-screen" class="screen">
+        <div class="game-header">
+            <!-- 
+                CONTADORES VISIBLES
+                - Movimientos: Se actualiza mediante updateMovesDisplay() que lee
+                  gameState.moves después de cada intento de emparejamiento.
+                - Tiempo: Se actualiza mediante updateTimerDisplay() que lee
+                  gameState.timerSeconds cada segundo mientras el juego está corriendo.
+            -->
+            <div class="game-stats">
+                <div class="stat">
+                    <span class="stat-label">Movimientos:</span>
+                    <span id="moves-counter" class="stat-value">0</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Tiempo:</span>
+                    <span id="timer" class="stat-value">00:00</span>
+                </div>
+            </div>
+            <!-- 
+                BOTÓN REINICIAR
+                Conectado a restartGame() que resetea el estado, baraja las cartas
+                nuevamente y reinicia el timer.
+            -->
+            <button 
+                id="restart-btn" 
+                class="btn btn-secondary"
+                aria-label="Reiniciar el juego"
+            >
+                Reiniciar
+            </button>
+        </div>
+
+        <!-- 
+            TABLERO DE JUEGO
+            Se renderiza dinámicamente con las cartas. Cada carta tiene:
+            - data-index: índice en el array gameState.cards
+            - data-card-id: ID único de la carta
+            - Event listener de click que llama a onCardFlip(index)
+            - Event listener de teclado (Enter/Space) para accesibilidad
+            - Navegación por teclado con flechas (manejada en handleKeyboardNavigation())
+        -->
+        <div id="game-board" class="game-board" role="grid" aria-label="Tablero de juego de memoria" tabindex="0"></div>
+    </div>
+
+    <!-- 
+        MODAL: ¿CÓMO SE JUEGA?
+        Oculto por defecto (sin clase "active"). Se muestra mediante openHowToPlayModal()
+        que agrega la clase "active". Se cierra con closeHowToPlayModal() o con ESC.
+        El overlay también cierra el modal al hacer clic fuera del contenido.
+    -->
+    <div id="how-to-play-modal" class="modal" role="dialog" aria-labelledby="how-to-play-title" aria-hidden="true">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="how-to-play-title">¿Cómo se juega?</h2>
+                <button 
+                    id="close-how-to-play" 
+                    class="modal-close"
+                    aria-label="Cerrar instrucciones"
+                >
+                    ×
+                </button>
+            </div>
+            <div class="modal-body">
+                <ol class="instructions-list">
+                    <li>Haz clic en una tarjeta para voltearla y ver su ícono.</li>
+                    <li>Haz clic en otra tarjeta para intentar encontrar su par.</li>
+                    <li>Si las dos tarjetas coinciden, permanecerán visibles.</li>
+                    <li>Si no coinciden, se voltearán de nuevo.</li>
+                    <li>El objetivo es encontrar todos los pares en el menor tiempo posible y con la menor cantidad de movimientos.</li>
+                    <li>¡Buena suerte!</li>
+                </ol>
+            </div>
+            <div class="modal-footer">
+                <button 
+                    id="close-how-to-play-btn" 
+                    class="btn btn-primary"
+                    aria-label="Cerrar instrucciones"
+                >
+                    Entendido
+                </button>
+            </div>
+        </div>
+        <div class="modal-overlay" aria-hidden="true"></div>
+    </div>
+
+    <!-- 
+        MODAL: VICTORIA
+        Oculto por defecto. Se muestra automáticamente cuando isWin() retorna true
+        mediante showWinModal(stats). Recibe un objeto stats con:
+        - time: tiempo en segundos (gameState.timerSeconds)
+        - moves: número de movimientos (gameState.moves)
+        - gridSize: tamaño de la grilla
+        También verifica y guarda el mejor tiempo con saveBestTime().
+        Los botones "Jugar de nuevo" y "Volver al inicio" están conectados a
+        playAgain() y backToHome() respectivamente.
+    -->
+    <div id="victory-modal" class="modal" role="dialog" aria-labelledby="victory-title" aria-hidden="true">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="victory-title">¡Felicitaciones!</h2>
+                <button 
+                    id="close-victory" 
+                    class="modal-close"
+                    aria-label="Cerrar modal de victoria"
+                >
+                    ×
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="victory-message">
+                    <p class="victory-text">¡Has completado el juego!</p>
+                    <div class="victory-stats">
+                        <div class="victory-stat">
+                            <span class="victory-stat-label">Tiempo:</span>
+                            <span id="victory-time" class="victory-stat-value">00:00</span>
+                        </div>
+                        <div class="victory-stat">
+                            <span class="victory-stat-label">Movimientos:</span>
+                            <span id="victory-moves" class="victory-stat-value">0</span>
+                        </div>
+                        <div id="new-record" class="new-record" aria-live="polite" aria-atomic="true"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <!-- 
+                    BOTÓN JUGAR DE NUEVO
+                    Llama a playAgain() que cierra el modal y reinicia el juego
+                    con restartGame().
+                -->
+                <button 
+                    id="play-again-btn" 
+                    class="btn btn-primary"
+                    aria-label="Jugar de nuevo"
+                >
+                    Jugar de nuevo
+                </button>
+                <!-- 
+                    BOTÓN VOLVER AL INICIO
+                    Llama a backToHome() que detiene el juego, cierra modales
+                    y vuelve a la pantalla de inicio.
+                -->
+                <button 
+                    id="back-to-home-btn" 
+                    class="btn btn-secondary"
+                    aria-label="Volver al inicio"
+                >
+                    Volver al inicio
+                </button>
+            </div>
+        </div>
+        <div class="modal-overlay" aria-hidden="true"></div>
+    </div>
+
+    <!-- 
+        SCRIPT PRINCIPAL
+        game.js contiene toda la lógica del juego:
+        - Estado del juego (gameState)
+        - Funciones de lógica pura (initGame, onCardFlip, checkMatch, isWin, etc.)
+        - Funciones de presentación (renderBoard, updateTimerDisplay, etc.)
+        - Event listeners que conectan los botones del HTML con las funciones
+        - Navegación por teclado (TAB, ENTER, ESC, flechas)
+        
+        Al cargar la página, se ejecuta init() que:
+        1. Carga los mejores tiempos (loadBestTimes)
+        2. Configura todos los event listeners (setupEventListeners)
+        3. Establece la dificultad inicial (setInitialDifficulty)
+    -->
+    <script src="game.js"></script>
+</body>
+</html>

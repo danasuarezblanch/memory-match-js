@@ -1,0 +1,772 @@
+/* ============================================
+   RESET Y VARIABLES
+   Paleta de colores: beige/blanco, grises oscuros, acentos coral/burdeos
+   ============================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    /* Colores principales - Paleta coral y burdeos */
+    --color-coral: #ff6b6b;
+    --color-coral-dark: #ee5a5a;
+    --color-burgundy: #8b2635;
+    --color-burgundy-light: #a05252;
+    
+    /* Colores de fondo - Beige suave y blanco */
+    --bg-beige: #f5f1eb;
+    --bg-white: #ffffff;
+    --bg-card: #ffffff;
+    --bg-card-back: #8b2635;
+    
+    /* Colores de texto - Grises oscuros */
+    --text-dark: #2c2c2c;
+    --text-medium: #5a5a5a;
+    --text-light: #8a8a8a;
+    --text-white: #ffffff;
+    
+    /* Colores de acento */
+    --accent-coral: #ff6b6b;
+    --accent-burgundy: #8b2635;
+    --accent-success: #51cf66;
+    
+    /* Espaciado */
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 1.5rem;
+    --spacing-lg: 2rem;
+    --spacing-xl: 3rem;
+    
+    /* Tipografías - Sans-serif moderna */
+    --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+    --font-size-base: 16px;
+    --font-size-sm: 0.875rem;
+    --font-size-md: 1rem;
+    --font-size-lg: 1.25rem;
+    --font-size-xl: 1.5rem;
+    --font-size-xxl: 2.5rem;
+    
+    /* Sombras suaves */
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.12);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.15);
+    --shadow-card: 0 2px 6px rgba(139, 38, 53, 0.2);
+    
+    /* Transiciones suaves */
+    --transition-fast: 0.2s ease;
+    --transition-normal: 0.3s ease;
+    --transition-slow: 0.5s ease;
+    --transition-flip: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* Bordes redondeados */
+    --border-radius: 12px;
+    --border-radius-lg: 16px;
+    --border-radius-sm: 8px;
+}
+
+/* ============================================
+   ESTILOS BASE
+   ============================================ */
+
+body {
+    font-family: var(--font-family);
+    font-size: var(--font-size-base);
+    color: var(--text-dark);
+    background: var(--bg-beige);
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: var(--spacing-md);
+}
+
+/* ============================================
+   PANTALLAS (SCREENS)
+   ============================================ */
+
+.screen {
+    display: none;
+    width: 100%;
+    max-width: 1200px;
+    animation: fadeIn var(--transition-normal);
+}
+
+.screen.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================
+   PANTALLA DE INICIO (HOME)
+   ============================================ */
+
+.home-container {
+    text-align: center;
+    background: var(--bg-white);
+    padding: var(--spacing-xl);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-lg);
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.game-title {
+    font-size: var(--font-size-xxl);
+    color: var(--color-burgundy);
+    margin-bottom: var(--spacing-xl);
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+/* Selector de dificultad */
+.difficulty-selector {
+    margin-bottom: var(--spacing-xl);
+}
+
+.difficulty-selector h2 {
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--spacing-md);
+    color: var(--text-dark);
+    font-weight: 600;
+}
+
+.difficulty-options {
+    display: flex;
+    gap: var(--spacing-md);
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.difficulty-btn {
+    background: var(--bg-white);
+    border: 2px solid var(--color-burgundy);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-md) var(--spacing-lg);
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-xs);
+    min-width: 120px;
+    font-family: var(--font-family);
+}
+
+.difficulty-btn:hover {
+    background: var(--color-burgundy);
+    color: var(--text-white);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.difficulty-btn:focus {
+    outline: 3px solid var(--color-coral);
+    outline-offset: 2px;
+}
+
+.difficulty-btn.selected {
+    background: var(--color-burgundy);
+    color: var(--text-white);
+    border-color: var(--color-burgundy);
+}
+
+.difficulty-name {
+    font-size: var(--font-size-md);
+    font-weight: 600;
+}
+
+.difficulty-size {
+    font-size: var(--font-size-sm);
+    opacity: 0.9;
+}
+
+/* Botones de acción en home */
+.home-actions {
+    display: flex;
+    gap: var(--spacing-md);
+    justify-content: center;
+    margin-bottom: var(--spacing-xl);
+    flex-wrap: wrap;
+}
+
+/* Mejores tiempos */
+.best-times {
+    margin-top: var(--spacing-xl);
+    padding-top: var(--spacing-lg);
+    border-top: 2px solid var(--bg-beige);
+}
+
+.best-times h3 {
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--spacing-md);
+    color: var(--text-dark);
+    font-weight: 600;
+}
+
+.time-records {
+    display: flex;
+    gap: var(--spacing-lg);
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.time-record {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.time-label {
+    font-size: var(--font-size-sm);
+    color: var(--text-medium);
+}
+
+.time-value {
+    font-size: var(--font-size-md);
+    font-weight: 600;
+    color: var(--color-burgundy);
+}
+
+/* ============================================
+   PANTALLA DE JUEGO
+   ============================================ */
+
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+    background: var(--bg-white);
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+}
+
+.game-stats {
+    display: flex;
+    gap: var(--spacing-lg);
+    flex-wrap: wrap;
+}
+
+.stat {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.stat-label {
+    font-size: var(--font-size-sm);
+    color: var(--text-medium);
+    font-weight: 500;
+}
+
+.stat-value {
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    color: var(--color-burgundy);
+}
+
+/* Tablero de juego */
+.game-board {
+    display: grid;
+    gap: var(--spacing-sm);
+    justify-content: center;
+    padding: var(--spacing-lg);
+    background: var(--bg-white);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-lg);
+}
+
+/* Configuración de grilla responsiva para diferentes dificultades */
+.game-board.easy {
+    grid-template-columns: repeat(4, 1fr);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.game-board.medium {
+    grid-template-columns: repeat(4, 1fr);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.game-board.hard {
+    grid-template-columns: repeat(4, 1fr);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* ============================================
+   TARJETAS DEL JUEGO - ANIMACIÓN 3D
+   ============================================ */
+
+.card {
+    aspect-ratio: 1;
+    cursor: pointer;
+    position: relative;
+    perspective: 1000px;
+    border: none;
+    box-shadow: var(--shadow-card);
+}
+
+.card:hover:not(.matched):not(.flipped) {
+    box-shadow: var(--shadow-md);
+}
+
+.card:focus {
+    outline: 3px solid var(--color-coral);
+    outline-offset: 2px;
+}
+
+/* Contenedor interno para el flip 3D */
+.card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.5s ease;
+}
+
+/* Animación de flip 3D cuando se voltea */
+.card.flipped .card-inner {
+    transform: rotateY(180deg);
+}
+
+/* Cartas emparejadas: permanecen boca arriba y bloqueadas */
+.card.matched {
+    cursor: default;
+    pointer-events: none; /* Bloquea cualquier interacción con la carta */
+    box-shadow: 0 0 0 3px rgba(171, 38, 53, 0.25);
+}
+
+/* Asegura que las cartas emparejadas se mantengan boca arriba (flipped) */
+.card.matched .card-inner {
+    transform: rotateY(180deg);
+}
+
+.card.matched:focus {
+    outline: none;
+}
+
+/* Caras de la tarjeta (frontal y trasera) */
+.card-face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    border-radius: var(--border-radius);
+    display: grid;
+    place-items: center;
+    -webkit-backface-visibility: hidden;
+}
+
+/* Cara trasera (cubierta burdeos) - visible cuando NO está volteada */
+.card-back {
+    background: var(--color-burgundy);
+    transform: rotateY(0deg);
+}
+
+/* Cara frontal (glyph/emoji) - visible cuando está volteada */
+.card-front {
+    background: var(--bg-white);
+    transform: rotateY(180deg);
+    border: 2px solid var(--bg-beige);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Estilo del glyph/emoji */
+.glyph {
+    font-size: calc(min(6vmin, 56px));
+    line-height: 1;
+}
+
+/* ============================================
+   BOTONES - Estilo moderno con bordes redondeados
+   ============================================ */
+
+.btn {
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border: none;
+    border-radius: var(--border-radius);
+    font-family: var(--font-family);
+    font-size: var(--font-size-md);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    min-width: 120px;
+    letter-spacing: 0.3px;
+}
+
+.btn:focus {
+    outline: 3px solid var(--color-coral);
+    outline-offset: 2px;
+}
+
+.btn-primary {
+    background: var(--color-coral);
+    color: var(--text-white);
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-primary:hover {
+    background: var(--color-coral-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-secondary {
+    background: var(--bg-white);
+    color: var(--color-burgundy);
+    border: 2px solid var(--color-burgundy);
+}
+
+.btn-secondary:hover {
+    background: var(--color-burgundy);
+    color: var(--text-white);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-secondary:active {
+    transform: translateY(0);
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* ============================================
+   MODALES - Fondo semitransparente, texto centrado
+   ============================================ */
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(44, 44, 44, 0.6);
+    backdrop-filter: blur(4px);
+}
+
+.modal-content {
+    position: relative;
+    background: var(--bg-white);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-lg);
+    max-width: 500px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    z-index: 1001;
+    animation: modalSlideIn var(--transition-normal);
+    text-align: center;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-lg);
+    border-bottom: 2px solid var(--bg-beige);
+}
+
+.modal-header h2 {
+    font-size: var(--font-size-xl);
+    color: var(--text-dark);
+    font-weight: 700;
+    margin: 0;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: var(--text-medium);
+    cursor: pointer;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--border-radius-sm);
+    transition: all var(--transition-fast);
+    line-height: 1;
+    font-weight: 300;
+}
+
+.modal-close:hover {
+    background: var(--bg-beige);
+    color: var(--text-dark);
+}
+
+.modal-close:focus {
+    outline: 3px solid var(--color-coral);
+    outline-offset: 2px;
+}
+
+.modal-body {
+    padding: var(--spacing-lg);
+    text-align: center;
+}
+
+.modal-footer {
+    padding: var(--spacing-lg);
+    border-top: 2px solid var(--bg-beige);
+    display: flex;
+    gap: var(--spacing-md);
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* Instrucciones */
+.instructions-list {
+    list-style-position: inside;
+    text-align: left;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.instructions-list li {
+    margin-bottom: var(--spacing-sm);
+    padding-left: var(--spacing-sm);
+    color: var(--text-dark);
+    line-height: 1.8;
+}
+
+/* Mensaje de victoria */
+.victory-message {
+    text-align: center;
+}
+
+.victory-text {
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--spacing-lg);
+    color: var(--accent-success);
+    font-weight: 600;
+}
+
+.victory-stats {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-lg);
+    max-width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.victory-stat {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: var(--bg-beige);
+    border-radius: var(--border-radius);
+}
+
+.victory-stat-label {
+    font-weight: 600;
+    color: var(--text-medium);
+}
+
+.victory-stat-value {
+    font-weight: 700;
+    color: var(--color-burgundy);
+    font-size: var(--font-size-lg);
+}
+
+.new-record {
+    padding: var(--spacing-sm);
+    background: var(--accent-success);
+    color: var(--text-white);
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    text-align: center;
+    margin-top: var(--spacing-sm);
+}
+
+/* ============================================
+   RESPONSIVE (11" - 23")
+   ============================================ */
+
+/* Tablets pequeñas y pantallas medianas (11" - 15") */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .game-board {
+        gap: var(--spacing-md);
+    }
+    
+    .game-title {
+        font-size: 2rem;
+    }
+    
+    .home-container {
+        padding: var(--spacing-lg);
+    }
+}
+
+/* Pantallas grandes (15" - 23") */
+@media (min-width: 1025px) {
+    .game-board {
+        gap: var(--spacing-md);
+        padding: var(--spacing-xl);
+    }
+    
+    .game-title {
+        font-size: 2.5rem;
+    }
+    
+    .home-container {
+        padding: var(--spacing-xl) var(--spacing-xl);
+    }
+    
+    .card {
+        max-width: 140px;
+    }
+}
+
+/* Pantallas muy pequeñas (menos de 11" - oculto para móvil) */
+@media (max-width: 767px) {
+    body {
+        padding: var(--spacing-sm);
+    }
+    
+    .home-container {
+        padding: var(--spacing-md);
+    }
+    
+    .game-title {
+        font-size: var(--font-size-xl);
+    }
+    
+    .difficulty-options {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .difficulty-btn {
+        width: 100%;
+    }
+    
+    .home-actions {
+        flex-direction: column;
+    }
+    
+    .btn {
+        width: 100%;
+    }
+    
+    .game-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .game-stats {
+        justify-content: space-around;
+    }
+    
+    .game-board {
+        gap: var(--spacing-xs);
+        padding: var(--spacing-sm);
+    }
+    
+    .modal-content {
+        width: 95%;
+        margin: var(--spacing-sm);
+    }
+    
+    .modal-footer {
+        flex-direction: column;
+    }
+    
+    .modal-footer .btn {
+        width: 100%;
+    }
+}
+
+/* ============================================
+   ACCESIBILIDAD
+   ============================================ */
+
+/* Mejora del foco visible para navegación por teclado (TAB, ENTER, ESC) */
+*:focus-visible {
+    outline: 3px solid var(--color-coral);
+    outline-offset: 2px;
+    border-radius: var(--border-radius-sm);
+}
+
+/* Ocultar elementos solo visualmente, mantener accesibilidad */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* Reducir animaciones para usuarios que lo prefieren */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .card {
+        transition: none;
+    }
+}
