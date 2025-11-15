@@ -107,10 +107,11 @@ function generateDeck(gridSize) {
     const totalCards = gridSize.rows * gridSize.cols;
     const totalPairs = totalCards / 2;
     
-    // Lista de emojis/glyphs disponibles (se usarán los primeros N pares)
+    // Lista de emojis veraniegos disponibles (se usarán los primeros N pares)
     const availableGlyphs = [
-        '🌞', '🌴', '🍒', '💫', '🌙', '🪐',
-        '💖', '✨', '🍓', '🧜‍♀️', '🌊', '🍹'
+        '🌞', '☀️', '🏖️', '🌴', '🌺', '🐬',
+        '🐚', '🍉', '🍦', '🕶️', '🏄‍♂️', '🌊',
+        '🍹', '⛱️'
     ];
     
     const deck = [];

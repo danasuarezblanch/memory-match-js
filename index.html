@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Juego de Memoria</title>
+    <title>Memotest de Verano ☀️</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -15,7 +18,7 @@
     -->
     <div id="home-screen" class="screen active">
         <div class="home-container">
-            <h1 class="game-title">Juego de Memoria</h1>
+            <h1 class="game-title">Memotest de Verano ☀️</h1>
             
             <!-- 
                 SELECTOR DE DIFICULTAD
@@ -27,27 +30,27 @@
                 <h2>Selecciona la dificultad:</h2>
                 <div class="difficulty-options">
                     <button 
-                        class="difficulty-btn" 
+                        class="difficulty-btn difficulty-easy" 
                         data-difficulty="easy"
                         aria-label="Dificultad fácil: 4 filas por 4 columnas"
                     >
-                        <span class="difficulty-name">Fácil</span>
+                        <span class="difficulty-name">Fácil 🌞</span>
                         <span class="difficulty-size">4x4</span>
                     </button>
                     <button 
-                        class="difficulty-btn" 
+                        class="difficulty-btn difficulty-medium" 
                         data-difficulty="medium"
                         aria-label="Dificultad media: 5 filas por 4 columnas"
                     >
-                        <span class="difficulty-name">Media</span>
+                        <span class="difficulty-name">Medio 🌴</span>
                         <span class="difficulty-size">5x4</span>
                     </button>
                     <button 
-                        class="difficulty-btn" 
+                        class="difficulty-btn difficulty-hard" 
                         data-difficulty="hard"
                         aria-label="Dificultad difícil: 6 filas por 4 columnas"
                     >
-                        <span class="difficulty-name">Difícil</span>
+                        <span class="difficulty-name">Difícil 🌊</span>
                         <span class="difficulty-size">6x4</span>
                     </button>
                 </div>
@@ -66,7 +69,7 @@
                     class="btn btn-primary"
                     aria-label="Comenzar a jugar"
                 >
-                    Jugar
+                    Comenzar Memotest
                 </button>
                 <button 
                     id="how-to-play-btn" 
@@ -173,14 +176,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <ol class="instructions-list">
-                    <li>Haz clic en una tarjeta para voltearla y ver su ícono.</li>
-                    <li>Haz clic en otra tarjeta para intentar encontrar su par.</li>
-                    <li>Si las dos tarjetas coinciden, permanecerán visibles.</li>
-                    <li>Si no coinciden, se voltearán de nuevo.</li>
-                    <li>El objetivo es encontrar todos los pares en el menor tiempo posible y con la menor cantidad de movimientos.</li>
-                    <li>¡Buena suerte!</li>
-                </ol>
+                <p class="instructions-text">Encontrá todos los pares veraniegos antes de que se acabe el tiempo. Dale vuelta a las cartas y buscá coincidencias.</p>
             </div>
             <div class="modal-footer">
                 <button 
@@ -245,7 +241,7 @@
                     class="btn btn-primary"
                     aria-label="Jugar de nuevo"
                 >
-                    Jugar de nuevo
+                    Jugar de nuevo 🔄
                 </button>
                 <!-- 
                     BOTÓN VOLVER AL INICIO

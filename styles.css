@@ -1,6 +1,6 @@
 /* ============================================
    RESET Y VARIABLES
-   Paleta de colores: beige/blanco, grises oscuros, acentos coral/burdeos
+   Paleta de colores veraniega: coral, amarillo pastel, fondo suave
    ============================================ */
 
 * {
@@ -10,28 +10,33 @@
 }
 
 :root {
-    /* Colores principales - Paleta coral y burdeos */
-    --color-coral: #ff6b6b;
-    --color-coral-dark: #ee5a5a;
-    --color-burgundy: #8b2635;
-    --color-burgundy-light: #a05252;
+    /* Colores principales - Paleta veraniega */
+    --color-coral: #FF7A5A;
+    --color-coral-dark: #e86a4a;
+    --color-yellow: #FFC857;
+    --color-yellow-dark: #e6b34d;
     
-    /* Colores de fondo - Beige suave y blanco */
-    --bg-beige: #f5f1eb;
+    /* Colores de dificultad */
+    --color-easy: #66D17A;
+    --color-medium: #FFC857;
+    --color-hard: #FF7A5A;
+    
+    /* Colores de fondo - Veraniego suave */
+    --bg-soft: #FFF7E9;
     --bg-white: #ffffff;
     --bg-card: #ffffff;
-    --bg-card-back: #8b2635;
+    --bg-card-back: #FF7A5A;
     
-    /* Colores de texto - Grises oscuros */
-    --text-dark: #2c2c2c;
+    /* Colores de texto */
+    --text-dark: #2A2A2A;
     --text-medium: #5a5a5a;
     --text-light: #8a8a8a;
     --text-white: #ffffff;
     
     /* Colores de acento */
-    --accent-coral: #ff6b6b;
-    --accent-burgundy: #8b2635;
-    --accent-success: #51cf66;
+    --accent-coral: #FF7A5A;
+    --accent-yellow: #FFC857;
+    --accent-success: #66D17A;
     
     /* Espaciado */
     --spacing-xs: 0.5rem;
@@ -40,8 +45,9 @@
     --spacing-lg: 2rem;
     --spacing-xl: 3rem;
     
-    /* Tipografías - Sans-serif moderna */
-    --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+    /* Tipografías - Google Fonts */
+    --font-title: 'Baloo 2', cursive, sans-serif;
+    --font-body: 'Poppins', sans-serif;
     --font-size-base: 16px;
     --font-size-sm: 0.875rem;
     --font-size-md: 1rem;
@@ -50,21 +56,21 @@
     --font-size-xxl: 2.5rem;
     
     /* Sombras suaves */
-    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
-    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.12);
-    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.15);
-    --shadow-card: 0 2px 6px rgba(139, 38, 53, 0.2);
+    --shadow-sm: 0 2px 8px rgba(255, 122, 90, 0.15);
+    --shadow-md: 0 4px 12px rgba(255, 122, 90, 0.2);
+    --shadow-lg: 0 8px 24px rgba(255, 122, 90, 0.25);
+    --shadow-card: 0 2px 8px rgba(255, 122, 90, 0.2);
     
     /* Transiciones suaves */
     --transition-fast: 0.2s ease;
     --transition-normal: 0.3s ease;
     --transition-slow: 0.5s ease;
-    --transition-flip: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-flip: 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
     
-    /* Bordes redondeados */
-    --border-radius: 12px;
-    --border-radius-lg: 16px;
-    --border-radius-sm: 8px;
+    /* Bordes redondeados - Más redondeados para fichas de playa */
+    --border-radius: 16px;
+    --border-radius-lg: 20px;
+    --border-radius-sm: 12px;
 }
 
 /* ============================================
@@ -72,10 +78,10 @@
    ============================================ */
 
 body {
-    font-family: var(--font-family);
+    font-family: var(--font-body);
     font-size: var(--font-size-base);
     color: var(--text-dark);
-    background: var(--bg-beige);
+    background: var(--bg-soft);
     line-height: 1.6;
     min-height: 100vh;
     display: flex;
@@ -125,8 +131,9 @@ body {
 }
 
 .game-title {
+    font-family: var(--font-title);
     font-size: var(--font-size-xxl);
-    color: var(--color-burgundy);
+    color: var(--color-coral);
     margin-bottom: var(--spacing-xl);
     font-weight: 700;
     letter-spacing: -0.5px;
@@ -153,8 +160,8 @@ body {
 
 .difficulty-btn {
     background: var(--bg-white);
-    border: 2px solid var(--color-burgundy);
-    border-radius: var(--border-radius);
+    border: 3px solid transparent;
+    border-radius: var(--border-radius-lg);
     padding: var(--spacing-md) var(--spacing-lg);
     cursor: pointer;
     transition: all var(--transition-normal);
@@ -162,14 +169,13 @@ body {
     flex-direction: column;
     align-items: center;
     gap: var(--spacing-xs);
-    min-width: 120px;
-    font-family: var(--font-family);
+    min-width: 140px;
+    font-family: var(--font-title);
+    box-shadow: var(--shadow-sm);
 }
 
 .difficulty-btn:hover {
-    background: var(--color-burgundy);
-    color: var(--text-white);
-    transform: translateY(-2px);
+    transform: translateY(-4px) scale(1.05);
     box-shadow: var(--shadow-md);
 }
 
@@ -178,10 +184,58 @@ body {
     outline-offset: 2px;
 }
 
-.difficulty-btn.selected {
-    background: var(--color-burgundy);
+/* Dificultad Fácil - Verde suave */
+.difficulty-easy {
+    border-color: var(--color-easy);
+    color: var(--color-easy);
+}
+
+.difficulty-easy:hover {
+    background: var(--color-easy);
     color: var(--text-white);
-    border-color: var(--color-burgundy);
+}
+
+.difficulty-easy.selected {
+    background: var(--color-easy);
+    color: var(--text-white);
+    border-color: var(--color-easy);
+    box-shadow: 0 4px 16px rgba(102, 209, 122, 0.4);
+}
+
+/* Dificultad Medio - Amarillo */
+.difficulty-medium {
+    border-color: var(--color-medium);
+    color: var(--color-medium);
+}
+
+.difficulty-medium:hover {
+    background: var(--color-medium);
+    color: var(--text-dark);
+}
+
+.difficulty-medium.selected {
+    background: var(--color-medium);
+    color: var(--text-dark);
+    border-color: var(--color-medium);
+    box-shadow: 0 4px 16px rgba(255, 200, 87, 0.4);
+}
+
+/* Dificultad Difícil - Coral */
+.difficulty-hard {
+    border-color: var(--color-hard);
+    color: var(--color-hard);
+}
+
+.difficulty-hard:hover {
+    background: var(--color-hard);
+    color: var(--text-white);
+}
+
+.difficulty-hard.selected {
+    background: var(--color-hard);
+    color: var(--text-white);
+    border-color: var(--color-hard);
+    box-shadow: 0 4px 16px rgba(255, 122, 90, 0.4);
 }
 
 .difficulty-name {
@@ -207,7 +261,7 @@ body {
 .best-times {
     margin-top: var(--spacing-xl);
     padding-top: var(--spacing-lg);
-    border-top: 2px solid var(--bg-beige);
+    border-top: 2px solid var(--bg-soft);
 }
 
 .best-times h3 {
@@ -238,7 +292,7 @@ body {
 .time-value {
     font-size: var(--font-size-md);
     font-weight: 600;
-    color: var(--color-burgundy);
+    color: var(--color-coral);
 }
 
 /* ============================================
@@ -279,7 +333,8 @@ body {
 .stat-value {
     font-size: var(--font-size-lg);
     font-weight: 700;
-    color: var(--color-burgundy);
+    color: var(--color-coral);
+    font-family: var(--font-title);
 }
 
 /* Tablero de juego */
@@ -323,10 +378,12 @@ body {
     perspective: 1000px;
     border: none;
     box-shadow: var(--shadow-card);
+    border-radius: var(--border-radius-lg);
 }
 
 .card:hover:not(.matched):not(.flipped) {
     box-shadow: var(--shadow-md);
+    transform: scale(1.02);
 }
 
 .card:focus {
@@ -334,13 +391,14 @@ body {
     outline-offset: 2px;
 }
 
-/* Contenedor interno para el flip 3D */
+/* Contenedor interno para el flip 3D - Animación suave y redondeada como fichas de playa */
 .card-inner {
     position: relative;
     width: 100%;
     height: 100%;
     transform-style: preserve-3d;
-    transition: transform 0.5s ease;
+    transition: transform var(--transition-flip);
+    border-radius: var(--border-radius-lg);
 }
 
 /* Animación de flip 3D cuando se voltea */
@@ -352,7 +410,8 @@ body {
 .card.matched {
     cursor: default;
     pointer-events: none; /* Bloquea cualquier interacción con la carta */
-    box-shadow: 0 0 0 3px rgba(171, 38, 53, 0.25);
+    box-shadow: 0 0 0 3px rgba(255, 122, 90, 0.3), var(--shadow-md);
+    opacity: 0.9;
 }
 
 /* Asegura que las cartas emparejadas se mantengan boca arriba (flipped) */
@@ -375,9 +434,9 @@ body {
     -webkit-backface-visibility: hidden;
 }
 
-/* Cara trasera (cubierta burdeos) - visible cuando NO está volteada */
+/* Cara trasera (cubierta coral) - visible cuando NO está volteada */
 .card-back {
-    background: var(--color-burgundy);
+    background: linear-gradient(135deg, var(--color-coral) 0%, var(--color-yellow) 100%);
     transform: rotateY(0deg);
 }
 
@@ -385,8 +444,8 @@ body {
 .card-front {
     background: var(--bg-white);
     transform: rotateY(180deg);
-    border: 2px solid var(--bg-beige);
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+    border: 3px solid var(--bg-soft);
+    box-shadow: inset 0 2px 8px rgba(255, 122, 90, 0.1);
 }
 
 /* Estilo del glyph/emoji */
@@ -402,14 +461,15 @@ body {
 .btn {
     padding: var(--spacing-sm) var(--spacing-lg);
     border: none;
-    border-radius: var(--border-radius);
-    font-family: var(--font-family);
+    border-radius: var(--border-radius-lg);
+    font-family: var(--font-title);
     font-size: var(--font-size-md);
     font-weight: 600;
     cursor: pointer;
     transition: all var(--transition-normal);
-    min-width: 120px;
+    min-width: 140px;
     letter-spacing: 0.3px;
+    box-shadow: var(--shadow-sm);
 }
 
 .btn:focus {
@@ -420,12 +480,11 @@ body {
 .btn-primary {
     background: var(--color-coral);
     color: var(--text-white);
-    box-shadow: var(--shadow-sm);
 }
 
 .btn-primary:hover {
     background: var(--color-coral-dark);
-    transform: translateY(-2px);
+    transform: translateY(-3px) scale(1.02);
     box-shadow: var(--shadow-md);
 }
 
@@ -436,14 +495,14 @@ body {
 
 .btn-secondary {
     background: var(--bg-white);
-    color: var(--color-burgundy);
-    border: 2px solid var(--color-burgundy);
+    color: var(--color-coral);
+    border: 2px solid var(--color-coral);
 }
 
 .btn-secondary:hover {
-    background: var(--color-burgundy);
+    background: var(--color-coral);
     color: var(--text-white);
-    transform: translateY(-2px);
+    transform: translateY(-3px) scale(1.02);
     box-shadow: var(--shadow-md);
 }
 
@@ -517,10 +576,11 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: var(--spacing-lg);
-    border-bottom: 2px solid var(--bg-beige);
+    border-bottom: 2px solid var(--bg-soft);
 }
 
 .modal-header h2 {
+    font-family: var(--font-title);
     font-size: var(--font-size-xl);
     color: var(--text-dark);
     font-weight: 700;
@@ -545,7 +605,7 @@ body {
 }
 
 .modal-close:hover {
-    background: var(--bg-beige);
+    background: var(--bg-soft);
     color: var(--text-dark);
 }
 
@@ -561,7 +621,7 @@ body {
 
 .modal-footer {
     padding: var(--spacing-lg);
-    border-top: 2px solid var(--bg-beige);
+    border-top: 2px solid var(--bg-soft);
     display: flex;
     gap: var(--spacing-md);
     justify-content: center;
@@ -569,18 +629,13 @@ body {
 }
 
 /* Instrucciones */
-.instructions-list {
-    list-style-position: inside;
-    text-align: left;
-    max-width: 400px;
-    margin: 0 auto;
-}
-
-.instructions-list li {
-    margin-bottom: var(--spacing-sm);
-    padding-left: var(--spacing-sm);
+.instructions-text {
     color: var(--text-dark);
     line-height: 1.8;
+    font-size: var(--font-size-lg);
+    text-align: center;
+    max-width: 500px;
+    margin: 0 auto;
 }
 
 /* Mensaje de victoria */
@@ -609,7 +664,7 @@ body {
     display: flex;
     justify-content: space-between;
     padding: var(--spacing-sm) var(--spacing-md);
-    background: var(--bg-beige);
+    background: var(--bg-soft);
     border-radius: var(--border-radius);
 }
 
@@ -620,8 +675,9 @@ body {
 
 .victory-stat-value {
     font-weight: 700;
-    color: var(--color-burgundy);
+    color: var(--color-coral);
     font-size: var(--font-size-lg);
+    font-family: var(--font-title);
 }
 
 .new-record {
