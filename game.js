@@ -57,6 +57,7 @@ const elements = {
     movesCounter: document.getElementById('moves-counter'),
     timer: document.getElementById('timer'),
     restartButton: document.getElementById('restart-btn'),
+    backToMenuButton: document.getElementById('back-to-menu'),
     
     // Modales
     howToPlayModal: document.getElementById('how-to-play-modal'),
@@ -681,6 +682,11 @@ function setupEventListeners() {
     
     // Botón de reiniciar
     elements.restartButton.addEventListener('click', restartGame);
+    
+    // Botón de volver al menú
+    if (elements.backToMenuButton) {
+        elements.backToMenuButton.addEventListener('click', backToHome);
+    }
     
     // Modal "Cómo se juega"
     elements.howToPlayButton.addEventListener('click', openHowToPlayModal);

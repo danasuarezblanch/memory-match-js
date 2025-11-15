@@ -132,17 +132,27 @@
                 </div>
             </div>
             <!-- 
-                BOTÓN REINICIAR
-                Conectado a restartGame() que resetea el estado, baraja las cartas
-                nuevamente y reinicia el timer.
+                BOTONES DE ACCIÓN
+                - Reiniciar: Conectado a restartGame() que resetea el estado, baraja las cartas
+                  nuevamente y reinicia el timer.
+                - Volver al menú: Conectado a backToHome() que detiene el juego y vuelve al menú principal.
             -->
-            <button 
-                id="restart-btn" 
-                class="btn btn-secondary"
-                aria-label="Reiniciar el juego"
-            >
-                Reiniciar
-            </button>
+            <div class="game-actions">
+                <button 
+                    id="restart-btn" 
+                    class="btn btn-secondary"
+                    aria-label="Reiniciar el juego"
+                >
+                    Reiniciar
+                </button>
+                <button 
+                    id="back-to-menu" 
+                    class="btn btn-secondary"
+                    aria-label="Volver al menú principal"
+                >
+                    ← Volver al menú
+                </button>
+            </div>
         </div>
 
         <!-- 

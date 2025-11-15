@@ -318,6 +318,12 @@ body {
     flex-wrap: wrap;
 }
 
+.game-actions {
+    display: flex;
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
 .stat {
     display: flex;
     flex-direction: column;
